@@ -1,14 +1,14 @@
 # Route 53
 
 ## Table of Contents
-1. [DNS 101](#dns101)
-2. [Simple Routing](#simpleroutingpolicy)
-3. [Weighted Routing Policy](#weightedroutingpolicy)
-4. [Latency Based Routing Policy](#latencybasedroutingpolicy)
-5. [Failover Routing Policy](#failoverroutingpolicy)
-6. [Geolocation Routing Policy](#geolocationroutingpolicy)
-7. [Geoproximity Routing Policy](#geoproximityrouting)
-8. [Multivalue Answer Routing Policy](#multivalueanswerroutingpolicy)
+1. [DNS 101](#dns-101)
+2. [Simple Routing](#simple-routing-policy)
+3. [Weighted Routing Policy](#weighted-routing-policy)
+4. [Latency Based Routing Policy](#latency-based-routing-policy)
+5. [Failover Routing Policy](#failover-routing-policy)
+6. [Geolocation Routing Policy](#geolocation-routing-policy)
+7. [Geoproximity Routing Policy](#geoproximity-routing)
+8. [Multivalue Answer Routing Policy](#multivalue-answer-routing-policy)
 9. [Summary](#summary)
 
 ## Useful Links
@@ -92,6 +92,7 @@
 # Multivalue Answer Routing Policy
 * Lets you configure Route 53 to return multiple values in response to DNS queries.
 * You can specify multiple values for almost any record, but multivalue answer routing also lets you check the health of each resource, so Route 53 only returns values for healthy resources.
+    * Route 53 responds to DNS queries with up to eight healthy records and gives different answers to different DNS resolvers. The choice of which to use is left to the requesting service effectively creating a form or randomization.
 * Think of this as a simple routing policy with a health check on each record set.
 
 # Summary
