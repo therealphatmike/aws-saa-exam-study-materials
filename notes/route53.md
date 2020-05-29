@@ -7,6 +7,9 @@
 4. [Latency Based Routing Policy](#latencybasedroutingpolicy)
 5. [Failover Routing Policy](#failoverroutingpolicy)
 6. [Geolocation Routing Policy](#geolocationroutingpolicy)
+7. [Geoproximity Routing Policy](#geoproximityrouting)
+8. [Multivalue Answer Routing Policy](#multivalueanswerroutingpolicy)
+9. [Summary](#summary)
 
 ## Useful Links
 * [How Health Checks Work in Complex Route 53 Configurations](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-complex-configs.html)
@@ -79,3 +82,25 @@
 * Lets your choose where your traffic will be sent based on the geographic location of your users.
   * You may want all queries from Europe to be routed to a fleet of EC2 instances that specifically configured for your european customers. These servers may have the local language of your european customers and all prices displayed in euros.
   * If you really want to lock down what instances users in specific regions are using, this is the policy you want.
+
+# Geoproximity Routing
+* Geoproximity routing lets Amazon Route 53 route traffic to your resources based on the geographic location of your user AND your resources.
+* You can also optionally choose to route more traffic or less to a given resource by specifying a value, known as a bias.
+    * A bias expands or shrinks the size of the geographic regions from which traffic routed to a resource.
+* To use Geoproximity Routing, you must use Route 53 traffic flow.
+
+# Multivalue Answer Routing Policy
+* Lets you configure Route 53 to return multiple values in response to DNS queries.
+* You can specify multiple values for almost any record, but multivalue answer routing also lets you check the health of each resource, so Route 53 only returns values for healthy resources.
+* Think of this as a simple routing policy with a health check on each record set.
+
+# Summary
+* ELBs do not have a pre*defined IPv4 address; you resolve them using a DNS name.
+* Understand the difference between an Alias Record and a CNAME
+* Common DNS Record Types:
+    * SOA Records
+    * NS Records
+    * A Records
+    * CNAMES
+    * MX Records
+    * PTR Records
