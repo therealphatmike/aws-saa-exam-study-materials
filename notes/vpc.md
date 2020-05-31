@@ -10,10 +10,15 @@ VPCs are immensly important to the Solutions Architect. Apparently, if you can b
 5. [Access Control Lists](#access-control-lists)
 6. [VPC Flow Logs](#vpc-flow-logs)
 7. [Bastion Hosts](#bastion-hosts)
+8. [Direct Connect](#direct-connect)
+9. [Global Accelerator](#global-accelerator)
+10. [VPC Endpoints](#vpc-endpoints)
 
 # Useful Links
 * [NAT Instance Basics](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html#basics)
 * [Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html)
+* [Configureing a VPN Over Direct Connect](https://www.youtube.com/watch?v=dhpTTT6V1So&feature=youtu.be)
+* [Global Accelerator](https://aws.amazon.com/global-accelerator/?blogs-global-accelerator.sort-by=item.additionalFields.createdDate&blogs-global-accelerator.sort-order=desc&aws-global-accelerator-wn.sort-by=item.additionalFields.postDateTime&aws-global-accelerator-wn.sort-order=desc)
 
 # Introduction
 * A VPC can be thought of as a virtual data center in the cloud.
@@ -112,3 +117,62 @@ VPCs are immensly important to the Solutions Architect. Apparently, if you can b
 * A NAT Gateway is used to provide internet traffic to EC2 in a private subnet
 * A bastion is used to securely adminiter EC2 instances (Using SSH or RDP). Bastioned are also called Jump Boxes
 * You cannot use a NAT gateway as a Bastion host.
+
+# Direct Connect
+* Direct Connect is a cloud service taht makes it easy to establish a dedicated network connection from your premises to AWS.
+  * Using Direct Connect, you can establish private connectivity between AWS and your datacenter, office, or colocation environment which can potentially reduce your network costs, increase bandwidth/throughput, and provide a more consistent network experience than internet-based connections.
+* Useful for high throughput workloads (lots of network traffic) or if you need a stable, reliable, and secure conenction.
+
+# Setting Up a VPN Over Direct Connect
+* This will be a theoretical exercise as DX connections will definitely take you out of free tier. These steps are important because you will be tested on this.
+1. Create a virtual interface in the Direct Connect console. This is a **PUBLIC Virtual Interface**!
+2. Go to the VPC console and then to VPN connections Create a customer gateway.
+3. Create a Virtual Private Gateway.
+4. Attach teh Virtual Private Gateway to the desired VPC.
+5. Select VPN Connections and create a new VPN connection.
+6. Select the Virtual Private Gateway and the Customer Gateway.
+7. Once the VPN is available, setup the VPN on the customer gateway or firewall.
+
+# Global Accelerator
+* Global Accelerator is a service in which you create accelerators to improve availability and performance of your applications for local and global audiences.
+* Glboal Accelerator works by directing traffic to optimal endpoints over the AWS global network. This improves the availability and performance of your internet application that are used by a global audience.
+* By default Global Accelerator provides you with two static IP addresses taht you associate with your accelerator.
+  * You can bring your own IPs if you want.
+* Global Accelerator includes the following components:
+  * Static IP Addresses
+  * Accelerator
+    * Accelerators direct traffic to optimal endpoints over the AWS global network to improve performance of your applications.
+    * Each accelerator has one or more listeners.
+  * DNS Name
+    * Each accelerator gets assigned a default DNS Name (something like 1234234sdsdfsdf.awsglobaleccelerator.com) that points to the static IP addresses that Global Accelerator assigns to you.
+    * Depending on the use case, you can use your accelerator's iP addresses or DNS name to route traffic to your accelerator, or setup DNS records to route traffic using your own custom domain name.
+  * Network Zone
+    * Services the static IP addresses for your accelertrator from a unqiue IP subnet.
+    * Similar to an AZ, a network zone is an isolated unit with its own set of physical infrastructure.
+    * When you configure an accelerator, by default, global accelerator allocates two IPv4 addresses for it. If one IP addres from a network zone becomes unavailable due to IP address blocking by certain client networks, or network disruptions, client applications can retry on the healthy static IP address from the other isolated network zone.
+  * Listener
+    * Processes inbound connection from clients to Global Accelerator, based on the port (or port range) and protocol that you configure.
+      * Global Accelerator supports both TCP and UDP protocols.
+    * Each listener has one or more endpoint groups associated with it, and traffic is forwarded to endpoints in one of the groups.
+    * You associate endpoint groups with listeners by specifying the regions that you want to distribute traffic to. Traffic is distributed to optimal endpoints within the endpoint groups associated with a listener.
+  * Endpoint Group
+    * Each endpoint is associated with a specific AWS region
+    * Endpoint groups include one or more endpoints in the region
+    * You can increase or reduce the percentage of traffic that would be otherwise directed to an endpoint group by adjusting a setting called the traffic dial.
+    * The traffic dial lets you easily do performance testing or bluie/green deployment testing for new releases across different AWS Regions.
+  * Endpoint
+    * Can be things like Network Load Balancers, ALBs, EC2 instances, or Elastic IP addresses.
+    * An ALB endpoint can be internet-facing or internal.
+    * Traffic is routed to endpoints based on configuration options that you choose, such as endpoint weights.
+    * For each endpoint, you can configure weghts, which are numbers taht you can use to specify the proportion of traffic to route to each one. This can be useful, for example, to do performance testing within a region.
+
+# VPC Endpoints
+* Enables you to privately connect your VPC to supported AWS services and VPC endpoint services powered by PrivateLink without requiring an internet gateway, NAT Device, VPN connection, or AWS Direct Connect connection. 
+* Instances in your VPC do not require public IP addresses to communicate with resources in the service. 
+* Traffic betwween your VPC and the other services does not leave the AWS network.
+* Endpoints are virtual devices that scale horizontally, are redundant and highly available, and allow communication between instances in your VPC and services without imposing availability risks or bandwidth constraints on your network traffic.
+* Two types of VPC endpoints:
+  * Interface Endpoints
+    * An interface endpoint is an elastic network interface with a private IP address that serves as an entry point for traffic destined to a supported service
+  * Gateway Endpoints
+    * Essentially NAT Gateways. Support S3 and DynamoDB
