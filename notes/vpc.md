@@ -15,6 +15,7 @@ VPCs are immensly important to the Solutions Architect. Apparently, if you can b
 10. [VPC Endpoints](#vpc-endpoints)
 
 # Useful Links
+* [VPC FAQs](https://aws.amazon.com/vpc/faqs/)
 * [NAT Instance Basics](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html#basics)
 * [Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html)
 * [Configureing a VPN Over Direct Connect](https://www.youtube.com/watch?v=dhpTTT6V1So&feature=youtu.be)

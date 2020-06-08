@@ -1,5 +1,7 @@
 # EC2
 
+* [EC2 FAQs](https://aws.amazon.com/ec2/faqs/)
+
 - 101
     - EC2: Elastic Compute Cloud
     - A web service that provides resizable compute capacity in the cloud. EC2 reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity, both up and down, as your computing requirements change.

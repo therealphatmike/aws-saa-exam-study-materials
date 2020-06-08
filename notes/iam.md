@@ -1,5 +1,7 @@
 # IAM
 
+* [IAM FAQs](https://aws.amazon.com/iam/faqs/)
+
 - IAM 101
 
     ## IAM: Identity Access Management

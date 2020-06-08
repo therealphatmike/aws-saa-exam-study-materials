@@ -12,6 +12,7 @@
 9. [Summary](#summary)
 
 ## Useful Links
+* [Route 53 FAQs](https://aws.amazon.com/route53/faqs/)
 * [How Health Checks Work in Complex Route 53 Configurations](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-complex-configs.html)
 
 # DNS 101
