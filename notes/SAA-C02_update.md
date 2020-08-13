@@ -112,3 +112,27 @@ This update is for all sections up to Databases on the ACG Udemy course.
     * Homogeneous migrations -- on prem oracle to cloud oracle
     * Heterogeneous migrations -- on prem mySQL to cloud Aurora
     * Can even migrate data from S3 to a database
+    * AWS SCT:
+      * Schema Conversion Tool is used for migrating one RDBMS flavor to another, for example Oracle to AWS Aurora
+      * Not needed if migrating to an identical database
+* Caching Strategies on AWS
+  * Which services have caching capabilities:
+    * CloudFront
+    * API Gateway
+    * ElastiCache -- duh
+    * DynamoDB Accelerator (DAX)
+  * Remember that caching is a balancing act between up-to-date, accurate information and latency
+* EMR Overview
+  * Elastic Map Reduce
+  * EMR is the industry-leading cloud big data platform. With EMR you can run petabyte scale analysis at a cheaper rate and fast than with traditional Apache Spark.
+  * The central component of Amazon EMR is the cluster. A cluster is a collection of Amazon EC2 instances. Each instance in the cluster is a called a node. Each node has a role within the cluster, referred to as the node type.
+    * Amazon EMR also installs different software components on each node type, giving each node a role in a distributed application like Apache Hadoop.
+  * Node Types:
+    * Master Node - A node that manages the cluster. The maste node tracks the status of tasks and monitors the health of the cluster. Every cluster has a master node.
+    * Core Node - A node with software components that runs tasks and stores data in the Hadoop Distributed File System (HDFS) on your cluster. Multi-node clusters have at least one core node.
+    * Task Node - A node with software components that only run tasks, and doesn't store data in HDFS. Task nodes are optional.
+  * All nodes can communicate with each other.
+  * Logs are stored on the master node at /mnt/var/log
+    * This means if you lose your master node, you lose your logs
+  * You can configure a cluster to periodically archive the log files stored on the master node to Amazon S3. This ensures the log files are available after the cluster terminates, whether this is through normal shutdown or due to an error. Amazon EMR archives the log files to Amazon S3 at 5 minute intervals.
+    * You can only set this up when you first set up the cluster.
