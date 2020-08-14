@@ -3,7 +3,8 @@
 ## Table of Contents
 1. [AWS Directory Service](#aws-directory-service)
 2. [IAM Policies](#iam-policies)
-3. [AWS Single Sign On](#aws-single-sign-on)
+3. [Resource Access Manager](#resource-access-manager) 
+4. [AWS Single Sign On](#aws-single-sign-on)
 
 ## AWS Directory Service
 * It is a family of managed services that allows you to connect your on premises AD to AWS resources
@@ -66,6 +67,66 @@
   * Cognito User Pools
 
 ## IAM Policies
+* Amazon Resource Name
+  * ARN for short.
+  * Uniquely identify any resource in AWS
+  * Begins with: arn:partition:service:region:account_id:
+    * partitions: AWS | AWS-CN
+  * Ends with: resource or resource type, can also be followed by a qualifier
+  * Examples:
+    * arn:aws:iam::123456789012:user/mark
+    * arn:aws:s3:::my_awesome_bucket/image.png
+    * arn:aws:dynamodb:us-east-1:123456789012:table/orders
+* IAM Policies:
+  * JSON Document that defines permissions
+  * Identity Policies: Attached to a user, group, or role.
+  * Resource Policies: Attached to AWS resources like S3 buckets. You can specify who/what has access to the resource or what actions that entity can take.
+  * No effect until attached to an identity or resource.
+  * Just a list of statements. Each statement matches an AWS API Request
+  * Example:
+    ```json
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "SpecificTable",
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:BatchGet*",
+            "dynamodb:DescribeStream",
+            "dynamodb:Get*"
+          ],
+          "Resource": "arn:aws:dynamodb:*:*:table/MyTable"
+        }
+      ]
+    }
+    ```
+  * Sid is just a human readable string so you know what the statement is for
+  * Effect can be either Allow or Deny
+  * Matched based on their Action
+  * Resource is the resource that the actions can be taken against
+  * A permission that is not explicitly allowed means it is implicitly denied
+  * An explicit deny trumps anything else
+  * AWS will join all applicable policies
+* Permission Boundaries
+  * Used to delefate administration to other users
+  * Helps prevent privilege escalation or unecessarily broad permissions
+  * Control the maximum permissions an IAM policy can grant
+
+## Resource Access Manager
+* AWS Resource Access Manager (RAM) allows resource sharing between accounts.
+* Resources you can currently share via RAM:
+  * App Mesh
+  * Aurora
+  * CodeBuild
+  * EC2
+  * EC2 Image Builder
+  * License Manager
+  * Resource Groups
+  * Route 53
 
 ## AWS Single Sign On
-
+* Allows for granular account-level permissions
+* AD and SAML integration
+* SAML - Security Assertion Markup Language
+* All sign on activity is arecorded in cloudtrail 
