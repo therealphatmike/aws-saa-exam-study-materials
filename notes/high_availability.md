@@ -6,14 +6,15 @@
 3. [HA Architecture](#ha-architecture)
 4. [Cloudformation](#cloudformation)
 5. [Elastic Beanstalk](#elastic-beanstalk)
-6. [Helpful Notes](#helpful-notes)
+6. [Highly Available Bastions](#highly-available-bastions)
+7. [On Premise Strategies](#on-premise-strategies)
+8. [Helpful Notes](#helpful-notes)
 
-# Helpful Links
+## Helpful Links
 * [What is Elastic Load Balancing](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html)
 * [Registered Instances for you Classic Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-backend-instances.html)
-* 
 
-# Load Balancer Theory
+## Load Balancer Theory
 * A load balancer is a physical or virtual device that allows you to balance network traffic between multiple webservers
 * AWS provides 3 different types of load balancers:
   * Application Load Balancer:
@@ -46,7 +47,7 @@
     * Example scenario:
       * write out from image
 
-# Auto-Scaling Theory
+## Auto-Scaling Theory
 * Auto Scaling has 3 different components:
   * Groups:
     * Logical component -- logical component where you group instances
@@ -76,7 +77,7 @@
         * You can use EC2 Auto Scaling in combination with AWS Auto Scaling to scale resources across multiple services.
         * AWS Auto Scaling can help you maintain optimal levels of availability and performance by combining predictive scaling and dynamic scaling (proactive and reactive approaches, respectively) to scale your EC2 capacity faster.
 
-# HA Architecture
+## HA Architecture
 * What is High Availability Architecture?
   * HA Architecture is the principles around fault tolerant and resilient systems through architecture.
   * 1st principle: Everything fails. Everything. Always plan for this.
@@ -87,13 +88,35 @@
     * Scaling out: Increase number of instances
     * Scaling up: Increase resources inside instances
 
-# CloudFormation
+## CloudFormation
 * A way to script your cloud environment.
 
-# Elastic Beanstalk
+## Elastic Beanstalk
 * A way of deploying applications to the cloud with one click
 * Can work with auto scaling groups, too
 
-# Helpful Notes
+## Highly Available Bastions
+*  Explained via diagrams
+
+## On Premise Strategies
+* On Prem AWS Services:
+  * Database Migration Service
+    * Allows you to move databases to and from AWS
+    * Might have your DR environment in AWS and your on-premises environment as your primary
+    * Works with most popular databse technologies, such as Oracle, MySQL, DynamoDB, etc.
+  * Server Migration Service
+    * Incremental replication of on-prem servers to AWS
+  * AWS Application Discovery Service
+    * Helps enterprises plan migration projects by gathering information about their on-prem data centers
+    * You install the AWS Application Discovery Agentless Connector as avirtual appliance on the VMWare vCenter.
+    * It will then build a server utilization map and dependency map of your on-prem env.
+    * The collected data is retained in an ecrypted format in an AWS Application Discovery Service data store. You can export this data as a CSV file and use it to estimate the Total Cost of Ownership of running on AWS and to plan your migration to AWS
+    * This data is also available in AWS Migration Hub, where you can migrate ythe discovered servers and track their progress as they get migrated to AWS.
+  * VM Import/Export
+    * Migrate your existing applications to EC2 for DR strategies
+  * Download Amazon Linux 2 as an ISO
+    * Works with all major virtualization providers
+
+## Helpful Notes
 * X-Forwarded-For headers:
   * When you make a request to an application using a load balancer, the load balancer will forward your request to the appropriate server. That request will contain the load balancers internal IP address. This can pose problems if you need to know origin or want IP-related information on your web server *Access Logs will only show the load balancer ip by default).  The X-Forwarded-For header will allow your web servers to know the IP address of the end user who made the request. This is added by Application Load Balancers.
