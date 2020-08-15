@@ -1,1 +1,172 @@
 * [RDS FAQs](https://aws.amazon.com/rds/faqs/)
+
+- Databases 101
+    - Relational Databases
+        - Existed since the 70s
+        - Think of a spreadsheet
+        - The file is the database
+        - The different tabs are the tables
+        - RDBMSs on AWS:
+            - SQL Server
+            - Oracle
+            - MySQL
+            - PostgreSQL
+            - Aurora (Amazon's Proprietary RDB)
+            - MariaDB
+        - RDS has two key features:
+            - Multi-AZ — for disaster recovery
+                - Primary DB in AZ1, Secondary in AZ2. If Primary gets lost, AWS will auto-update the DNS to point to the secondary DB. (Automatic fail-over)
+            - Read Replicas — for performance
+                - Writes to primary are replicated to read replica
+                - No automatic failover
+                - If primary DB is getting too many reads, you can set scale to read from replicas
+                - You can have 5 read replicas
+    - Non-Relational Databases
+        - Collection — table
+        - Document — Row
+        - Key Value Pairs — Fields
+    - Data Warehousing
+        - Used for BI — used to pull in large and complex data sets
+        - OLTP vs OLAP
+            - OLTP:
+                - Query for order number 234789, pulls up a row of relevant data
+            - OLAP:
+                - Pulls in large number of records
+        - Data Warehousing DBs use different tpye of architecture from both a database and infrastructure perspective
+            - Amazon's Data Warehousing solution is Redshift
+    - Elasticache
+        - Elasticache is a web service that makes it easy to deploy, operate, and scale an in-memory cache in the cloud.
+        - The service improves the performance of web applications by allowing you to retrieve information from fast, managed, in-memory caches, instead of relying entirely on slower disk-based databases.
+        - Elasticache supports two open-source in-memory caching engines:
+            - Memcached
+            - Redis
+    - Exam Tips
+        - RDS (OLTP)
+            - SQL
+            - MySQL
+            - PostgreSQL
+            - Oracle
+            - Aurora
+            - MariaDB
+        - DynamoDB (No SQL)
+        - Redshift (OLAP)
+        - Elasticache — Memcached or redis
+- Let's Create An RDS Instance
+    - Exam Tips
+        - RDS runs on VMS - you can't SSH into these VMs
+        - You cannot log into these OSs
+        - Amazon assumes responsibility for patching ofRDS OS and DB
+        - RDS is NOT serverless (you will be asked this)
+            - There is serverless Aurora, but this is not the point of the question
+- RDS Backups, Multi-AZ & Read Replicas
+    - There are two different types of backups with RDS
+        - Automated Backups
+            - Allow you to recover your database to any point in time within a retention period. The retention period can be between 1 and 35 days. Automated backups will take a full daily snapshot and will also store transaction logs throughout the day. When you do a recover, AWS will first choose the most recent daily backup, and then apply transaction logs relevant to that day. This allows your to do a point in time recovery down to a second, within the retention period.
+            - Automated backups are enabled by default.
+            - The backup data is stored in S3, and you get free storage space equal to the size of your database.
+            - Backups are taken within a defined window. During the backup window, storage I/O may be suspended while your data is being backed up and you may experience elevated latency.
+            - Get deleted when your RDS instance is deleted.a
+        - Database Snapshots
+            - Snapshots are done manually.
+            - Stored even after you delete your RDS instance.
+        - Whenever you restore either an Automatic backup or snapshot, the restored version of the DB will be a new RDS instance with a new DNS endpoint.
+    - Encryption at rest is supported for MySQL, Oracle, SQL Server, PostgreSQL, MariaDB and Aurora. Encryption is done using KMS. Once your RDS instance in encrypted,the data stored at rest in the underlying storage is encrypted, as are its automated backups, read replicas, and snapshots.
+    - Multi-AZ will synchronously replicate your db to an instance in another AZ. DNS will auto failover to the replica.
+        - You don't need to update connection strings
+        - For disaster recovery only. It is not for performance improvement
+        - Available for:
+            - SQL Server
+            - Oracle
+            - MySQL
+            - PostgreSQL
+            - MariaDB
+        - Aurora is fault tolerant by architecture
+    - Read Replicas:
+        - Allow you to have a readonly copy of your production database. This is achieved by using asynchronous replication from the primary RDS instance to the read replica. You use read replicas primarily to very read-heavy database workloads.
+            - Can be used to increase performance for read ops.
+        - Available for:
+            - MySQL
+            - PostgreSQL
+            - MariaDB
+            - Oracle
+            - Aurora
+        - Used for scaling, not for DR.
+        - Must have automatic backups enabled to deploy a read replica.
+        - You can have up to 5 read replica copies of any database.
+        - You can have read replicas of read replicas, but this can cause latency issues.
+        - Each read replica will have its own DNS endpoint.
+        - You can have read replicas that Multi-AZ turned on.
+        - You can create read replicas of Multi-AZ databases.
+        - Read replicas can be promoted to be their own databases. This breaks replication, though.
+        - You can have a read replica in a second region.
+- DynamoDB
+    - Amazons No SQL Solution
+    - Fast and flexible NoSQL database service for all applications that need consistent, single-digit millisecond latency at any scale. It is a fully managed database and supports both document and key-value data models. Its flexible data model and reliable performance make it a great fit for mobile, web, gaming, ad-tech, IoT, and many other applications.
+    - The basics:
+        - Stored on SSD storage
+        - Spread across 3 geographically distinct data centers
+        - Eventually Consistent Reads (default) — or —
+            - Consistency across all copies of data is usually reached within a second. Repeating a read after a short time should return the updated data. (Best Read Performance).
+        - Strongly Consistent Reads
+            - Returns a result that reflects all writes that received a successful response prior to the read
+            - For apps that need to read immediately afterwards
+- Redshift
+    - A fast and powerful, fully managed, petabyte scale data warehouse service in the cloud.
+    - Start small for $0.25 per hour with no commitments or upfront costs and scale to a petabyte or more for $1,000 per terabyte per year, less than a tenth of most other data warehousing solutions.
+    - OLAP transactions
+    - Data warehousing databases use different type of architecture from a database perspective and an infrastructure layer.
+    - Can be configurable as follows:
+        - Single Node: 160GB
+        - Multi-Node
+            - Leader Node (manages client connections and receives queries)
+            - Compute Node (store data and perform queries and computations). Up to 128 Compute Nodes.
+    - Redshift uses Advanced Compression:
+        - Columnar data stored can be compressed much more than row-based data stores because similar data is stored sequentially on disk. Amazon Redshift employs multiple compression techniques and can often achieve significant compression relative to traditional relational data stores. In addition, Amazon Redshift doesn't require indexes or materialized views, and so uses less space than traditional relational database systems. When loading data into an empty table, Redshift automatically samples your data and selects the most appropriate compression scheme.
+    - Massively Parallel Processing:
+        - Amazon Redshift automatically distributes data and query load across all nodes. Redshift makes it easy to add nodes to your data warehouse and enables you to maintain fast query performance as your data warehouse grows.
+    - Backups:
+        - Backups enabled by default with a 1 day retention period
+        - Max 35 day retention period.
+        - Redshift always attempts to maintain at least three copies of your data — the original and replica on the compute nodes and a backup in S3.
+        - Can asynchronously replicate snapshots to S3 in another region for disaster recovery.
+    - Pricing is based on compute node hours.
+        - 1 unit per node per hour
+            - Example: a 3-node data warehouse cluster running persistently for an entire month would incur 2.160 instance hours. You will not be charged for leader node hours; only compute nodes incur charges.
+        - Backups
+        - Data Transfer (only iwthin a VPC, not outside it)
+    - Security:
+        - Traffic encrypted in transit
+        - Encrypted at rest using AES-256 encryption
+        - By default Redshift takes care of key-management
+            - Manage your own keys through HSM
+            - AWS KMS
+    - Availability:
+        - Currently only available in 1 AZ
+        - Can restore snapshots to new AZs in the event of an outage
+- Aurora
+    - MySQL and PostgreSQL compatible relational database engine that combines the speed and availability of high-end commercial databases with the simplicity and cost-effectiveness of open source databases.
+    - Aurora provides up to 5x performance than mySQL, and 3x over PostgreSQL at a lower price point whilst delivering similar performance and availability
+    - Starts with 10GB Scales in 10GB increments up to 64TB
+    - Compute resources can scale up to 32vCPUs and 244GB of memory
+    - 2 copies of your data are contained in each availability zone, with minimum of 3 availability zones. — 6 total copies of your data
+    - Aurora is designed to transparently handle the loss of up to two copies of data without affecting write availability and up to three copies without affecting read availability.
+    - Aurora storage is also self-healing. Data blocks and disks are continuously scanned for error and repaired automatically.
+    - 3 types of aurora read replicas:
+        - Aurora Replicas (currently 15)
+        - MySQL Read Replicas (currently 5)
+        - PostgreSQL (currently 1)
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7055fd5a-c56e-4c36-866c-9ec43ee255ce/Screen_Shot_2020-05-15_at_9.12.19_PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7055fd5a-c56e-4c36-866c-9ec43ee255ce/Screen_Shot_2020-05-15_at_9.12.19_PM.png)
+
+- Backups:
+    - Automated backups are always enabled and do not impact performance
+    - You can also take snapshots with Aurora. This also does not affect database performance.
+    - You can share Aurora Snapshots with other AWS accounts.
+- Aurora Serverless is an on-demand, autoscaling configuration for the MySQL-compatible and PostgreSQL-compatible editions of Amazon Aurora. An Aurora Serverless DB cluster automatically starts up, shuts down, aand scaled capacity up or down based on your applications needs.
+    - Provides a simple and cost effective option for infrequent, intermittent, or unpredictable workloads.
+- 
+- Elasticache
+    - A webservice that makes it easy to deploy, operate, and scale an in-memory cache in the cloud.
+    - It improved the performance of web applications by allowing them to retrieve information from fast, managed, in-memory caches, instead of relying entirely on slower disked-based databases.
+    - Supports memcached and redis
+    - redis is multi AZ and supports backups and restores
