@@ -13,6 +13,9 @@ VPCs are immensly important to the Solutions Architect. Apparently, if you can b
 8. [Direct Connect](#direct-connect)
 9. [Global Accelerator](#global-accelerator)
 10. [VPC Endpoints](#vpc-endpoints)
+11. [VPC Private Link](#vpc-private-link)
+12. [Tansit Gateway](#transit-gateway)
+13. [VPN Hub](#vpn-hub)
 
 # Useful Links
 * [VPC FAQs](https://aws.amazon.com/vpc/faqs/)
@@ -177,3 +180,26 @@ VPCs are immensly important to the Solutions Architect. Apparently, if you can b
     * An interface endpoint is an elastic network interface with a private IP address that serves as an entry point for traffic destined to a supported service
   * Gateway Endpoints
     * Essentially NAT Gateways. Support S3 and DynamoDB
+
+## VPC Private Link
+* How to open your services in a VPC to another VPC
+  * You can use an internet gateway where your vpc is connected to the internet
+    * This has security implications
+    * Creates a lot of management overhead
+  * You could also use a peering connection, but that doesn't scale well since you would need to create a connection for each and every VPC you wanted to connect to.
+  * Private Link will allow you to open your services in one VPC to another VPC.
+    * AWS tailor biult this service for this use case, so it is the easiest and best way to expose a service VPC to tens, hundresm or thousands of customer VPCs
+    * Doesn't require VPC peering; no route tables, NATs, IGWs, etc
+    * Requires a NLB on the service VPC and an ENI on the customer VPC
+
+## Tansit Gateway
+* A service that allows you to simplify your network topology by allowing a single connection point for all your network connections, be them direct connect, VPN, VPC.
+* Operates on a Spoke and Hub model, where transit gateway is the hub
+* Works on a regional basis, but has the ability to cross regions.
+* Can be used with RAM to allow your Transit Gateway to span multiple accounts.
+* You can use route tables to limit how VPCs talk to each other
+* Supports IP Multicast
+
+## VPN Hub
+* If you have multiple sites, each with it's own VPN connection, you can use AWS VOn CloudHub to connect those sites together.
+* Hub and Spoke Model
